@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a reproducible problem in TicketTune
+title: "[Bug]: "
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve TicketTune. Do not include credentials, private tickets,
+        customer data, model weights, or private artifact contents.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets, personal data, and private model or dataset content.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the problem and the result you expected.
+      placeholder: TicketTune did ...; I expected ...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: List the smallest commands or steps that reproduce the problem.
+      placeholder: |
+        1. Run ...
+        2. Open ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: input
+    id: revision
+    attributes:
+      label: TicketTune revision or version
+      placeholder: Git commit SHA or package version
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and proof layer
+      description: Include OS, Python version, hardware, profile, and whether this was offline, real-model, GPU, serving, hosted, or production execution.
+      placeholder: macOS; Python 3.12; CPU; offline fixture-backed check
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Sanitized output
+      description: Paste only the smallest useful error or report excerpt after removing sensitive data.
+      render: shell

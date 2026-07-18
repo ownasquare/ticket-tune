@@ -1,0 +1,152 @@
+[build-system]
+requires = ["hatchling>=1.28,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tickettune"
+version = "0.1.0"
+description = "A reproducible support-triage fine-tuning reference using LoRA and QLoRA."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { file = "LICENSE" }
+authors = [{ name = "Fortune Vieyra" }]
+keywords = ["fine-tuning", "lora", "qlora", "transformers", "peft", "trl", "vllm", "ollama"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+  "pydantic>=2.12,<3",
+  "pyyaml>=6.0.2,<7",
+  "rich>=14.3,<15",
+  "typer>=0.24,<1",
+]
+
+[project.optional-dependencies]
+train = [
+  "accelerate==1.14.0",
+  "bitsandbytes==0.49.2",
+  "datasets==5.0.0",
+  "peft==0.19.1",
+  "safetensors>=0.6,<1",
+  "sentencepiece>=0.2,<1",
+  "torch>=2.8,<3",
+  "transformers==5.13.0",
+  "trl==1.7.1",
+]
+convert = [
+  "cmake==4.4.0",
+]
+
+[project.scripts]
+tickettune = "tickettune.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tickettune"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"configs/smoke.yaml" = "tickettune/starter/configs/tickettune.yaml"
+"data/raw/support_tickets.jsonl" = "tickettune/starter/data/raw/support_tickets.jsonl"
+"tests/fixtures/predictions_pass.jsonl" = "tickettune/starter/predictions/pass.jsonl"
+"src/tickettune/starter/PROJECT_README.md" = "tickettune/starter/PROJECT_README.md"
+"src/tickettune/starter/gitignore.txt" = "tickettune/starter/gitignore.txt"
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/src",
+  "/tests",
+  "/configs",
+  "/data/raw",
+  "/data/qualified/review-manifest.example.json",
+  "/deploy",
+  "/docs",
+  "/results",
+  "/scripts",
+  "/uv.lock",
+  "/.python-version",
+  "/.env.example",
+  "/.secrets.baseline",
+  "/README.md",
+  "/CODE_OF_CONDUCT.md",
+  "/LICENSE",
+  "/DATA_LICENSE.md",
+  "/THIRD_PARTY_NOTICES.md",
+  "/SECURITY.md",
+  "/CONTRIBUTING.md",
+  "/Makefile",
+]
+exclude = [
+  "/docs/handoffs",
+  "/docs/superpowers",
+  "/results/readiness",
+]
+
+[tool.uv]
+default-groups = ["dev"]
+
+[dependency-groups]
+dev = [
+  "bandit>=1.8,<2",
+  "build>=1.3,<2",
+  "detect-secrets==1.5.0",
+  "mypy>=1.19,<2",
+  "pip-audit>=2.9,<3",
+  "pytest>=9.0,<10",
+  "pytest-cov>=7.0,<8",
+  "pytest-socket>=0.7,<1",
+  "ruff>=0.15,<1",
+  "types-pyyaml>=6.0.12,<7",
+]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers --disable-socket"
+testpaths = ["tests"]
+markers = [
+  "integration: exercises multiple local pipeline components",
+  "live_model: downloads or executes a real model",
+  "gpu: requires a compatible CUDA GPU",
+  "serving: requires a local vLLM or Ollama server",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["tickettune"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "S", "RUF"]
+ignore = ["S101"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S106", "S108"]
+"deploy/examples/*.py" = ["S310"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unreachable = true
+packages = ["tickettune"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["accelerate.*", "bitsandbytes.*", "datasets.*", "peft.*", "torch.*", "transformers.*", "trl.*"]
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]

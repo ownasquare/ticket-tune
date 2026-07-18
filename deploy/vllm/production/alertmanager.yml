@@ -1,0 +1,18 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: tickettune-webhook
+  group_by:
+    - alertname
+    - severity
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+receivers:
+  - name: tickettune-webhook
+    webhook_configs:
+      - url_file: /run/secrets/alertmanager_webhook_url
+        send_resolved: true
+        max_alerts: 20

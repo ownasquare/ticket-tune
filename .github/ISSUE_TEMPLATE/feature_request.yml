@@ -1,0 +1,48 @@
+name: Feature request
+description: Propose a focused improvement to TicketTune
+title: "[Feature]: "
+labels: []
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the user problem first. TicketTune favors small, testable features with explicit
+        data, model-license, security, and proof-boundary consequences.
+  - type: textarea
+    id: problem
+    attributes:
+      label: User problem
+      description: Who is blocked, and what are they trying to accomplish?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Explain the smallest workflow or interface change that would solve the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Note existing commands, profiles, or workarounds you evaluated.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance evidence
+      description: State the tests and proof layer that should demonstrate completion without overstating GPU, serving, hosted, or production status.
+      placeholder: Offline contract tests plus an opt-in real-model check on documented hardware
+    validations:
+      required: true
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Impact review
+      options:
+        - label: I considered dataset provenance and privacy.
+        - label: I considered base-model and dependency licenses.
+        - label: I identified any new network, credential, GPU, or deployment requirements.

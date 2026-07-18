@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "profile": "qwen-0.5b-candidate-local",
+  "proof_scope": "real three-epoch CPU FP32 LoRA training on the deterministic 1120-record candidate",
+  "status": "completed_best_checkpoint_restored",
+  "source_control": {
+    "git_revision": "196be11ad42771e32e913c39619fb891c22a3623",
+    "git_branch": "agent/qualified-data-cuda-release",
+    "git_dirty": false
+  },
+  "run": {
+    "id": "20260718T222130.824188Z-a3827144ce4d",
+    "relative_path": "artifacts/qwen-0.5b-candidate-local/runs/20260718T222130.824188Z-a3827144ce4d",
+    "manifest_sha256": "e184c4221a62fb3849e03127ec0f2689f5966112fe3a1905b641865fabe2acc6",
+    "config_sha256": "a3827144ce4da96f90d9babf8d30de9efc3779588ba33219e3f31a2460ec8227",
+    "optimizer_steps": 336,
+    "epochs": 3.0,
+    "training_duration_seconds": 2692.6495,
+    "train_loss": 0.12212744120084348
+  },
+  "model": {
+    "name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "method": "lora",
+    "precision": "fp32",
+    "execution_accelerator": "cpu",
+    "downloads_allowed": false
+  },
+  "dataset": {
+    "source_sha256": "611ae32a0ee3304cca87d3ab610496cc08133a5cf457239fc79574247a46f5b6",
+    "manifest_sha256": "479bdf2dbfd93502c7416464e0ddd50fcb26f41b65d6f1eb42b208ca1fe07daa",
+    "total_examples": 1120,
+    "splits": {
+      "train": {
+        "count": 896,
+        "sha256": "49ec9cd7506f30ebaaf0bda9814daa331631780eb851af9e747191c87edb2366"
+      },
+      "validation": {
+        "count": 112,
+        "sha256": "121d7c5eebbdcbdc5339da3c04f847e874a2540ad88449206ea292492760c562"
+      },
+      "test": {
+        "count": 112,
+        "sha256": "e0cf0900fd3f5def7835fd920ef58440f6817acd7352147e6a629e512945aef3"
+      }
+    }
+  },
+  "checkpoint_selection": {
+    "metric": "eval_loss",
+    "selected_step": 336,
+    "selected_value": 0.0007495026220567524,
+    "adapter_matches_selected_checkpoint": true
+  },
+  "adapter": {
+    "relative_path": "artifacts/qwen-0.5b-candidate-local/runs/20260718T222130.824188Z-a3827144ce4d/adapter",
+    "config_sha256": "1471828cb45edc72ed79e81bc170ba4c5d8448d99323ea3c85189b9cbe9c6aad",
+    "weights_sha256": "30be9543276563ad2f5ca5da7a99e74486d09a85e42a7ffa4c9b1310bc38ac0f"
+  },
+  "release_eligible": false,
+  "release_blockers": [
+    "Two distinct human reviewers have not approved every record in packet-backed v1.2 evidence.",
+    "No real Linux CUDA QLoRA execution or live vLLM runtime acceptance has occurred."
+  ]
+}

@@ -1,0 +1,38 @@
+groups:
+  - name: tickettune-production
+    rules:
+      - alert: TicketTuneVllmDown
+        expr: up{job="tickettune-vllm"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TicketTune vLLM target is unavailable
+          description: The gateway has been unable to scrape the private vLLM target for two minutes.
+
+      - alert: TicketTuneRequestsWaiting
+        expr: vllm:num_requests_waiting > 8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: TicketTune inference queue is persistently backed up
+          description: More than eight requests have waited for execution for at least five minutes.
+
+      - alert: TicketTuneAlertmanagerDown
+        expr: up{job="tickettune-alertmanager"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: TicketTune Alertmanager is unavailable
+          description: Prometheus has been unable to scrape Alertmanager for two minutes, so notifications may not be delivered.
+
+      - alert: TicketTunePrometheusStorageCapacity
+        expr: sum(prometheus_tsdb_storage_blocks_bytes) > 4294967296
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: TicketTune Prometheus storage is nearing its default retention cap
+          description: Prometheus block storage has exceeded 4 GiB; investigate before the default 5 GB retention-size cap is reached.

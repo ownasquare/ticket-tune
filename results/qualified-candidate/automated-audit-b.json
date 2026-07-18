@@ -1,0 +1,104 @@
+{
+  "audit_id": "ticket-tune-qualified-candidate-semantic-audit-b-2026-07-18",
+  "audit_type": "independent_semantic_consistency",
+  "reviewer_type": "automated",
+  "human_review": false,
+  "release_qualification_effect": "none",
+  "source": {
+    "path": "data/qualified/support_tickets.jsonl",
+    "sha256": "611ae32a0ee3304cca87d3ab610496cc08133a5cf457239fc79574247a46f5b6",
+    "record_count": 1120,
+    "unique_id_count": 1120
+  },
+  "scope": {
+    "selection": "all_records",
+    "exhaustive": true,
+    "records_audited": 1120,
+    "checks_per_record": 9,
+    "record_level_checks_executed": 10080
+  },
+  "method": {
+    "category_support": "Checked every user issue against an independent category-specific semantic-anchor vocabulary covering access, billing, malfunction, cancellation, requested behavior, shipping, and security intent.",
+    "priority_support": "Required the user issue to contain exactly the impact cue associated with its expected priority and none of the other three impact cues.",
+    "sentiment_support": "Required the user issue to contain exactly the wording cue associated with its expected sentiment and none of the other four sentiment cues.",
+    "next_action_policy": "Validated the action syntax and required category-specific routing prefixes: access verify/review/inspect; billing review/trace/apply/restore; bug triage; cancellation and feature review; shipping trace/review; security secure/review/revoke/lock.",
+    "response_safety": "Required future-tense review and safe-routing language, rejected completed-resolution claims, and rejected identifiers or placeholders in responses.",
+    "pii_safety": "Compared declared placeholders with placeholder use and scanned placeholder-redacted user text plus responses for email, IPv4, SSN, payment-card, phone-number, and credential-value patterns.",
+    "consistency": "Required the assistant JSON to equal the expected object and verified the fixed synthetic, CC0-1.0, no-real-customer-data provenance declaration.",
+    "limitations": [
+      "This is a deterministic automated policy audit, not a human judgment review.",
+      "Pattern-based PII checks reduce risk but cannot prove that no sensitive information exists.",
+      "Passing this audit does not approve, qualify, train, merge, deploy, or release the dataset or a model."
+    ]
+  },
+  "grid_counts": {
+    "categories": {
+      "account_access": 160,
+      "billing": 160,
+      "bug": 160,
+      "cancellation": 160,
+      "feature_request": 160,
+      "security": 160,
+      "shipping": 160
+    },
+    "priorities": {
+      "high": 280,
+      "low": 280,
+      "medium": 280,
+      "urgent": 280
+    },
+    "sentiments": {
+      "angry": 224,
+      "frustrated": 224,
+      "neutral": 224,
+      "positive": 224,
+      "worried": 224
+    },
+    "category_priority_sentiment_cells": 140,
+    "records_per_cell": 8
+  },
+  "check_counts": {
+    "record_structure": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "category_support": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "priority_support": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "sentiment_support": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "next_action_policy": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "response_safe_no_completed_resolution": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "pii_absence_and_placeholder_safety": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "assistant_expected_consistency": {
+      "passed": 1120,
+      "failed": 0
+    },
+    "synthetic_provenance": {
+      "passed": 1120,
+      "failed": 0
+    }
+  },
+  "result": {
+    "status": "pass",
+    "finding_count": 0
+  },
+  "findings": [],
+  "qualification_notice": "Automated audit B found no policy violations in its defined checks. It is not human review and has no release-qualification effect."
+}

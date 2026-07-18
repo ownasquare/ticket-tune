@@ -1,0 +1,12 @@
+{
+  "base_model_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "bias": "none",
+  "inference_mode": true,
+  "lora_alpha": 16,
+  "lora_dropout": 0.05,
+  "peft_type": "LORA",
+  "r": 8,
+  "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "target_modules": "all-linear",
+  "task_type": "CAUSAL_LM"
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "profile": "qwen-0.5b-lora-local",
+  "proof_scope": "real multi-epoch CPU LoRA training with validation-selected checkpoint",
+  "status": "completed_best_checkpoint_restored",
+  "source_control": {
+    "git_revision": "1edaf0a122ee0136025be272dfd9643dc027c625",
+    "git_dirty": false,
+    "execution_mode": "clean_detached_worktree"
+  },
+  "run": {
+    "id": "20260718T194628.319207Z-32c9008dd440",
+    "relative_path": "artifacts/qwen-0.5b-lora-local/runs/20260718T194628.319207Z-32c9008dd440",
+    "manifest_sha256": "607cd91336821ec789ba77f7f6e3589b0c65b313bb424215995d115e9486701c",
+    "config_sha256": "32c9008dd4403a5df79c9fe9434fd5a3a06c1079944e4ddda2d2fdb3689803e1",
+    "optimizer_steps": 88,
+    "epochs": 8.0,
+    "training_duration_seconds": 324.4029,
+    "train_loss": 1.1093594858592206
+  },
+  "model": {
+    "name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "method": "lora",
+    "precision": "fp32",
+    "execution_accelerator": "cpu"
+  },
+  "dataset": {
+    "source_sha256": "a8480b1c14abf5b1d7eef09d301bf8b5d2a4687e1020d74d287165065d33e709",
+    "manifest_sha256": "c800b714dd8b4f3098f90dcce384f5146c5e8d6dc13e6f9725c66e3b1fe3e1ed",
+    "total_examples": 56,
+    "splits": {
+      "train": {
+        "count": 42,
+        "sha256": "f026b75de35a603802c66042ebc292921f99df1f97ed5c006b6d829635795798"
+      },
+      "validation": {
+        "count": 7,
+        "sha256": "7e80845a9e72b7dcf62afbac8102d8de3c48826ef7454bd044405ff2490b47b2"
+      },
+      "test": {
+        "count": 7,
+        "sha256": "08d8433b2e2fdeaf99946b1266a6958bac507a8e736e4f98aae2114bd02a6bb0"
+      }
+    }
+  },
+  "token_budget": {
+    "examples": 49,
+    "max_full_tokens": 358,
+    "max_sequence_length": 512,
+    "min_completion_tokens": 46
+  },
+  "checkpoint_selection": {
+    "metric": "eval_loss",
+    "selected_step": 50,
+    "selected_value": 1.3699300289154053,
+    "selected_checkpoint_weights_sha256": "a444ad03cc5938683296917dbc349ab1071800fd731149297f0b43be1a9d527e",
+    "final_step_value": 1.4917595386505127,
+    "final_checkpoint_weights_sha256": "6d7f62b82e994a65367c540ee20369b1e215a1bc60b0fbae3ec023c31e35ef36",
+    "adapter_matches_selected_checkpoint": true
+  },
+  "adapter": {
+    "relative_path": "artifacts/qwen-0.5b-lora-local/runs/20260718T194628.319207Z-32c9008dd440/adapter",
+    "config_sha256": "9cca14ca7442c6cb36df1fa10e2dc0f26abc0d35b869f1dcf9bee8db2c09bf24",
+    "weights_sha256": "a444ad03cc5938683296917dbc349ab1071800fd731149297f0b43be1a9d527e"
+  },
+  "release_eligible": false,
+  "release_blockers": [
+    "The seven-row local test does not pass the absolute category and priority thresholds.",
+    "The 56-row teaching corpus is outside the qualified release dataset tier.",
+    "No real CUDA QLoRA or serving acceptance evidence exists."
+  ]
+}

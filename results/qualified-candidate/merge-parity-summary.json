@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "profile": "qwen-0.5b-candidate-local",
+  "proof_scope": "real FP32 safe merge and full held-out adapter-versus-merged inference parity",
+  "status": "merge_completed_full_parity_passed",
+  "source_run_id": "20260718T222130.824188Z-a3827144ce4d",
+  "safe_merge": {
+    "completed": true,
+    "relative_path": "artifacts/qwen-0.5b-candidate-local/merged/20260718T2316Z-local-smoke",
+    "dtype": "float32",
+    "provenance_sha256": "b41363c031d3f024d6e9d9f5fbd791930beaa6edc3a59f865a7a1f8a474c65d1",
+    "model_weights_sha256": "3e8d50020fa85d94e5a8a6a889ad539bd516f73ad4e8886f7158561cf5f8eb7e",
+    "lineage_boundary": "unqualified_local_smoke_override_not_release_evidence"
+  },
+  "parity": {
+    "enforced": true,
+    "process_exit_code": 0,
+    "passed": true,
+    "id": "f11ff560bcf029e0",
+    "report_path": "artifacts/qwen-0.5b-candidate-local/parity/20260718T2317Z-report.json",
+    "report_sha256": "596cdc5df91078adc20c67f5c5a57a28c4bec7533b404133f591323ddce86810",
+    "examples": 112,
+    "contract_invalid_ids": [],
+    "release_blocked_ids": [],
+    "mismatched_ids": [],
+    "metrics": {
+      "adapter_schema_valid_rate": 1.0,
+      "merged_schema_valid_rate": 1.0,
+      "category_match_rate": 1.0,
+      "priority_match_rate": 1.0,
+      "sentiment_match_rate": 1.0,
+      "next_action_match_rate": 1.0,
+      "routing_match_rate": 1.0,
+      "raw_prediction_exact_rate": 1.0,
+      "parsed_object_exact_rate": 1.0,
+      "response_exact_rate": 1.0
+    }
+  },
+  "release_eligible": false,
+  "acceptance_result": "Merge fidelity passed on all held-out rows; human dataset qualification and real CUDA/vLLM acceptance remain separate gates."
+}

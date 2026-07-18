@@ -1,0 +1,174 @@
+{
+  "audit_id": "ticket-tune-qualified-candidate-automated-a-v1",
+  "audit_date": "2026-07-18",
+  "reviewer_type": "automated",
+  "human_review": false,
+  "release_qualification_effect": "none",
+  "status": "pass",
+  "scope": {
+    "source": "data/qualified/support_tickets.jsonl",
+    "generator_source": "src/tickettune/synthetic.py",
+    "exhaustive": true,
+    "records_inspected": 1120,
+    "manual_edge_samples_inspected": 16
+  },
+  "source_identity": {
+    "sha256": "611ae32a0ee3304cca87d3ab610496cc08133a5cf457239fc79574247a46f5b6",
+    "size_bytes": 2396124,
+    "generator_source_sha256": "1b4b085599280ccd546c9b0c6cf16e0d722cedd850b3f410cb9a53e1fed2b6f0",
+    "generated_sha256_first_pass": "611ae32a0ee3304cca87d3ab610496cc08133a5cf457239fc79574247a46f5b6",
+    "generated_sha256_second_pass": "611ae32a0ee3304cca87d3ab610496cc08133a5cf457239fc79574247a46f5b6",
+    "source_equals_generator_output": true,
+    "repeated_generation_equal": true
+  },
+  "counts": {
+    "records": 1120,
+    "strict_schema_valid": 1120,
+    "canonical_jsonl_records": 1120,
+    "normalized_string_records": 1120,
+    "unique_ids": 1120,
+    "unique_normalized_ids": 1120,
+    "unique_normalized_user_messages": 1120,
+    "unique_normalized_assistant_messages": 1120,
+    "unique_normalized_conversations": 1120,
+    "system_prompt_exact_matches": 1120,
+    "assistant_expected_exact_matches": 1120,
+    "assistant_canonical_json_matches": 1120,
+    "synthetic_cc0_provenance_matches": 1120,
+    "placeholder_privacy_passes": 1120,
+    "safe_response_language_passes": 1120,
+    "pii_pattern_hits": 0,
+    "unsafe_response_pattern_hits": 0,
+    "failures": 0
+  },
+  "balance": {
+    "categories": {
+      "account_access": 160,
+      "billing": 160,
+      "bug": 160,
+      "cancellation": 160,
+      "feature_request": 160,
+      "security": 160,
+      "shipping": 160
+    },
+    "priorities": {
+      "high": 280,
+      "low": 280,
+      "medium": 280,
+      "urgent": 280
+    },
+    "sentiments": {
+      "angry": 224,
+      "frustrated": 224,
+      "neutral": 224,
+      "positive": 224,
+      "worried": 224
+    },
+    "category_priority_sentiment_combinations": 140,
+    "records_per_combination_min": 8,
+    "records_per_combination_max": 8,
+    "variant_set_per_combination": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "placeholder_occurrences": {
+    "[ACCOUNT_ID]": 380,
+    "[ADDON_ID]": 20,
+    "[ALERT_ID]": 20,
+    "[API_KEY_ID]": 20,
+    "[BOOKING_ID]": 20,
+    "[DEVICE_ID]": 40,
+    "[DOCUMENT_ID]": 40,
+    "[FILE_ID]": 20,
+    "[INTEGRATION_ID]": 20,
+    "[INVOICE_ID]": 80,
+    "[ITEM_ID]": 40,
+    "[ORDER_ID]": 100,
+    "[PAYMENT_ID]": 40,
+    "[REPORT_ID]": 60,
+    "[SERVICE_ID]": 20,
+    "[SUBSCRIPTION_ID]": 60,
+    "[TOKEN_ID]": 20,
+    "[TRACKING_ID]": 80,
+    "[VIEW_ID]": 20,
+    "[WORKFLOW_ID]": 20,
+    "[WORKSPACE_ID]": 60
+  },
+  "checks": [
+    {
+      "name": "strict_schema_and_json",
+      "status": "pass",
+      "details": "Every line decoded as strict JSON without duplicate keys or non-finite values, validated as the frozen TicketExample schema, and matched canonical newline-terminated JSONL."
+    },
+    {
+      "name": "exact_7x4x5x8_balance",
+      "status": "pass",
+      "details": "All 140 category-priority-sentiment combinations contain exactly variants 01 through 08."
+    },
+    {
+      "name": "unique_ids_and_normalized_content",
+      "status": "pass",
+      "details": "IDs, user messages, assistant messages, and combined conversations remain unique after Unicode NFKC, whitespace collapse, trim, and case folding; all stored strings are NFC, trimmed, and control-character free."
+    },
+    {
+      "name": "placeholder_only_privacy",
+      "status": "pass",
+      "details": "Each user message uses declared allow-listed placeholders; discovered and declared inventories match exactly. After placeholder removal, scans found no email, IP address, URL, SSN, phone, payment-card, UUID, or long numeric identifier pattern."
+    },
+    {
+      "name": "synthetic_cc0_provenance",
+      "status": "pass",
+      "details": "Every record declares source synthetic, license CC0-1.0, contains_real_customer_data false, and the fixed generator identifier. The complete corpus is byte-identical to two independent generator executions."
+    },
+    {
+      "name": "system_prompt_equality",
+      "status": "pass",
+      "details": "All 1,120 system messages exactly equal the TicketTune task contract."
+    },
+    {
+      "name": "assistant_json_equality",
+      "status": "pass",
+      "details": "All assistant messages are canonical strict JSON and exactly equal their corresponding expected objects."
+    },
+    {
+      "name": "response_safety_language",
+      "status": "pass",
+      "details": "All responses use the bounded review-and-route template, include a next safe step and privacy protection, and contain no request for secrets, guaranteed outcome, claimed completed sensitive action, or private-data disclosure phrase."
+    },
+    {
+      "name": "deterministic_source_hash",
+      "status": "pass",
+      "details": "The checked source and both regenerated byte streams share the same SHA-256 digest."
+    }
+  ],
+  "manual_edge_sample_ids": [
+    "TTQ-ACC-LOW-POS-01",
+    "TTQ-ACC-LOW-POS-08",
+    "TTQ-ACC-URG-WOR-08",
+    "TTQ-BIL-LOW-POS-01",
+    "TTQ-BIL-URG-WOR-08",
+    "TTQ-BUG-LOW-POS-01",
+    "TTQ-BUG-URG-WOR-08",
+    "TTQ-CAN-LOW-POS-01",
+    "TTQ-CAN-URG-WOR-08",
+    "TTQ-FEA-LOW-POS-01",
+    "TTQ-FEA-URG-WOR-08",
+    "TTQ-SHP-LOW-POS-01",
+    "TTQ-SHP-URG-WOR-08",
+    "TTQ-SEC-LOW-POS-01",
+    "TTQ-SEC-URG-WOR-01",
+    "TTQ-SEC-URG-WOR-08"
+  ],
+  "findings": [],
+  "limitations": [
+    "Pattern-based privacy and safety checks are automated heuristics; byte equality to the deterministic synthetic generator provides the stronger provenance control for this corpus.",
+    "This audit is not a human review, does not approve any record for release, and cannot satisfy or change the independent-human-review qualification gate."
+  ]
+}

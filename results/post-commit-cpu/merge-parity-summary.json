@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "profile": "cpu-smoke",
+  "proof_scope": "real PEFT safe merge followed by enforced adapter-versus-merged inference parity",
+  "status": "merge_completed_parity_gate_failed",
+  "source_run_id": "20260718T133903.836834Z-4b8b28a480d1",
+  "safe_merge": {
+    "completed": true,
+    "relative_path": "artifacts/post-commit-cpu/deployments/20260718T133903.836834Z-4b8b28a480d1-merged",
+    "provenance_sha256": "2d327b3037be70d851990fe5772aa3d1ab4aca2a69783d73470e0756ff7ef65a",
+    "model_weights_sha256": "392f15af50457423faeea778ccf1d0a2866b901b682036cd7d042099cc7fb50b",
+    "adapter_config_sha256": "20975ec9951ab1f00cf802e9c75e46760c6d7f09437eaafe944a952a5a221c14",
+    "adapter_weights_sha256": "cb662bdd4606b98d18c824ef889b8e0eef70c8c685e37777dd8532961bca4e38",
+    "local_smoke_override": true
+  },
+  "parity": {
+    "enforced": true,
+    "process_exit_code": 1,
+    "passed": false,
+    "id": "b5a5579e1ca05f11",
+    "report_path": "artifacts/post-commit-cpu/parity/runs/20260718T133903.836834Z-4b8b28a480d1/parity-report.json",
+    "report_sha256": "111eecc78687fd7ef2b77b049a962bdcda53fc13416a28ce5a688cfc5c32fc9c",
+    "examples": 7,
+    "mismatched_examples": 7,
+    "metrics": {
+      "adapter_schema_valid_rate": 0.0,
+      "merged_schema_valid_rate": 0.0,
+      "category_match_rate": 0.0,
+      "priority_match_rate": 0.0,
+      "sentiment_match_rate": 0.0,
+      "next_action_match_rate": 0.0,
+      "routing_match_rate": 0.0,
+      "response_exact_rate": 0.0
+    },
+    "required_rate_for_each_release_gate": 1.0
+  },
+  "release_eligible": false,
+  "legacy_interpretation": {
+    "actual_cross_side_drift_proven": false,
+    "reason": "The legacy report classified schema-invalid rows as mismatches and cannot distinguish invalid equality from real routing drift."
+  },
+  "acceptance_result": "The safe-merged artifact is retained as local diagnostic evidence only and was correctly rejected because the historical composite parity gate did not pass."
+}

@@ -1,0 +1,58 @@
+# Python and tooling
+__pycache__/
+*.py[cod]
+*.egg-info/
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+!deploy/**/.env.example
+deploy/vllm/production/*.env
+deploy/vllm/production/release-manifest.json
+deploy/vllm/production/releases/
+deploy/vllm/production/runtime/
+deploy/vllm/production/secrets/
+*.pem
+*.key
+*.crt
+
+# Model and dataset caches
+.cache/
+.huggingface/
+models/
+checkpoints/
+runs/
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/validation/
+artifacts/validation/*
+!artifacts/validation/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/qualified/*
+!data/qualified/review-manifest.example.json
+
+# Training products
+*.bin
+*.ckpt
+*.gguf
+*.pt
+*.pth
+*.safetensors
+!tests/fixtures/**/*.safetensors
+adapter_config.json
+!tests/fixtures/**/adapter_config.json
+trainer_state.json
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/

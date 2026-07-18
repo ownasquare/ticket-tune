@@ -1,0 +1,29 @@
+{
+  "approval_status": "draft",
+  "consent_or_license_statement": "CC0-1.0 synthetic records; no real customer data or consent dependency.",
+  "holdout_freeze": {
+    "path": "holdout-freeze.json",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "intended_domain": "Synthetic customer-support triage benchmark; not representative production traffic.",
+  "isolated_test_set_statement": "The held-out examples were frozen before model training, tuning, or evaluation.",
+  "pii_decision": "no_real_customer_data",
+  "prepared_manifest": {
+    "path": "prepared-manifest.json",
+    "sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "record_count": 1120,
+  "review_date": null,
+  "reviewer_packets": [
+    {
+      "path": "reviewer-a.json",
+      "sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+    },
+    {
+      "path": "reviewer-b.json",
+      "sha256": "4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  ],
+  "schema_version": "1.2",
+  "source_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "profile": "qwen-7b-qlora",
+  "proof_scope": "static QLoRA contract plus observed local hardware; no CUDA execution",
+  "report_path": "artifacts/validation/cuda-contract-rehearsal-1edaf0a.json",
+  "report_sha256": "46d14705a9d52b21a18811addd356c9c3ae6d4a942bb7369c705bbaa6c02bd44",
+  "static_contract_passed": true,
+  "runtime_status": "blocked_no_cuda",
+  "release_status": "ineligible_rehearsal",
+  "release_eligible": false,
+  "truth_markers": {
+    "executed_cuda": false,
+    "model_weights_loaded": false,
+    "optimizer_steps": 0,
+    "adapter_artifacts_written": false,
+    "run_manifest_written": false
+  },
+  "remaining_external_gates": [
+    "Approved Linux NVIDIA CUDA host with bfloat16 support and compute capability 6.0 or newer.",
+    "Independently reviewed qualified dataset and exact held-out cohort.",
+    "Real positive optimizer-step, CUDA memory, quality, parity, and serving evidence."
+  ]
+}

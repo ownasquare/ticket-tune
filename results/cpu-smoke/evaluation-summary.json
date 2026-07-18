@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "profile": "cpu-smoke",
+  "proof_scope": "immutable held-out comparison of the one-step adapter against the pinned base model",
+  "status": "completed_but_quality_gate_failed",
+  "evaluation": {
+    "id": "20260718T032044.486658Z-1d098b688c10",
+    "relative_path": "artifacts/cpu-smoke/evaluation/runs/20260718T032044.486658Z-1d098b688c10",
+    "manifest_path": "artifacts/cpu-smoke/evaluation/runs/20260718T032044.486658Z-1d098b688c10/evaluation-manifest.json",
+    "manifest_sha256": "95dea57e51bcd8d4f0b98fd374101f4fa5a5947a73725bd67e501dcfbb9e7ba8",
+    "config_sha256": "35d6408e9cb4ce5af8c3480929e51c649ae68a263064eb8450ae7f2b83ce4adb",
+    "examples": 7,
+    "test_split_sha256": "5439239bf9a2c3c69db4492696a8d05914043e0f5ac4bd1cbf5e4357ece8ebd5"
+  },
+  "model": {
+    "name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+  },
+  "candidate": {
+    "adapter_weights_sha256": "7d0f3473628c0958205f2dae3e7438a77466910f5e795acab83ed84d52d4c695",
+    "passed_absolute_thresholds": false,
+    "metrics": {
+      "strict_json_rate": 0.8571428571428571,
+      "schema_valid_rate": 0.0,
+      "category_accuracy": 0.2857142857142857,
+      "category_macro_f1": 0.2857142857142857,
+      "priority_accuracy": 0.0,
+      "priority_macro_f1": 0.0,
+      "sentiment_accuracy": 0.0,
+      "sentiment_macro_f1": 0.0,
+      "response_policy_rate": 0.8571428571428571,
+      "exact_match_rate": 0.0,
+      "field_completeness_rate": 0.8571428571428571
+    }
+  },
+  "baseline": {
+    "passed_absolute_thresholds": false,
+    "metrics": {
+      "strict_json_rate": 0.8571428571428571,
+      "schema_valid_rate": 0.0,
+      "category_accuracy": 0.0,
+      "category_macro_f1": 0.0,
+      "priority_accuracy": 0.0,
+      "priority_macro_f1": 0.0,
+      "sentiment_accuracy": 0.0,
+      "sentiment_macro_f1": 0.0,
+      "response_policy_rate": 0.8571428571428571,
+      "exact_match_rate": 0.0,
+      "field_completeness_rate": 0.8571428571428571
+    }
+  },
+  "absolute_thresholds": {
+    "strict_json_rate": 0.95,
+    "schema_valid_rate": 0.95,
+    "category_accuracy": 0.85,
+    "priority_accuracy": 0.85,
+    "sentiment_accuracy": 0.8,
+    "response_policy_rate": 0.95
+  },
+  "comparison": {
+    "passed": false,
+    "all_zero_regression_checks_passed": true,
+    "metric_deltas_candidate_minus_baseline": {
+      "strict_json_rate": 0.0,
+      "schema_valid_rate": 0.0,
+      "category_accuracy": 0.2857142857142857,
+      "category_macro_f1": 0.2857142857142857,
+      "priority_accuracy": 0.0,
+      "priority_macro_f1": 0.0,
+      "sentiment_accuracy": 0.0,
+      "sentiment_macro_f1": 0.0,
+      "response_policy_rate": 0.0,
+      "exact_match_rate": 0.0
+    },
+    "failure_reason": "The one-step smoke adapter passed every zero-regression check but failed the configured absolute quality thresholds."
+  },
+  "report_sha256": {
+    "candidate_json": "19d2cd5ac7765bf5cd165c98cea1163151b7a64558c1402d8eae78b222ba3329",
+    "baseline_json": "cb36fa7cb9b3cd15391252e205876fb15934728de730be2f712e0b3ce60768f9"
+  },
+  "proof_boundaries": {
+    "proven": [
+      "The adapter and baseline were evaluated on the same seven immutable held-out examples.",
+      "Candidate provenance points to the exact adapter and dataset hashes.",
+      "The quality gate fails closed when absolute thresholds are not met."
+    ],
+    "not_proven": [
+      "A quality-qualified model",
+      "Generalization beyond this seven-example smoke split",
+      "Production performance or safety"
+    ]
+  }
+}

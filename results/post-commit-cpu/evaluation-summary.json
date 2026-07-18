@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "profile": "cpu-smoke",
+  "proof_scope": "immutable held-out candidate and baseline comparison",
+  "status": "completed_but_quality_gate_failed",
+  "evaluation": {
+    "id": "20260718T133931.793491Z-6228253b7393",
+    "relative_path": "artifacts/post-commit-cpu/evaluation/runs/20260718T133931.793491Z-6228253b7393",
+    "manifest_sha256": "d28a03ed2ded14b091c75d5bb687fc19046ad4ad15b13f3a039a5ab72d4edfb7",
+    "examples": 7,
+    "test_split_sha256": "5439239bf9a2c3c69db4492696a8d05914043e0f5ac4bd1cbf5e4357ece8ebd5"
+  },
+  "lineage": {
+    "training_manifest_sha256": "e7586aa05b414cf3c5b5d96e58c3235416a8f8ee031281f172b0e42da6550eb4",
+    "training_config_sha256": "4b8b28a480d1ffad91389e34d8f339ede74fad86153ee49697f26fca8d7ac01d",
+    "adapter_config_sha256": "20975ec9951ab1f00cf802e9c75e46760c6d7f09437eaafe944a952a5a221c14",
+    "adapter_weights_sha256": "cb662bdd4606b98d18c824ef889b8e0eef70c8c685e37777dd8532961bca4e38"
+  },
+  "candidate": {
+    "report_sha256": "516323ffa3aeba1dd016c043b4bb179f5ea8141e818b264b38908657b0b098e6",
+    "passed_absolute_thresholds": false,
+    "metrics": {
+      "strict_json_rate": 0.8571428571428571,
+      "schema_valid_rate": 0.0,
+      "category_accuracy": 0.2857142857142857,
+      "category_macro_f1": 0.2857142857142857,
+      "priority_accuracy": 0.0,
+      "sentiment_accuracy": 0.0,
+      "response_policy_rate": 0.8571428571428571,
+      "exact_match_rate": 0.0
+    }
+  },
+  "baseline": {
+    "report_sha256": "ca121a9b46637d63a706f69e19bc47cfc078b802c192064e98aa4eb4d93f1dcf",
+    "passed_absolute_thresholds": false,
+    "metrics": {
+      "strict_json_rate": 0.8571428571428571,
+      "schema_valid_rate": 0.0,
+      "category_accuracy": 0.0,
+      "category_macro_f1": 0.0,
+      "priority_accuracy": 0.0,
+      "sentiment_accuracy": 0.0,
+      "response_policy_rate": 0.8571428571428571,
+      "exact_match_rate": 0.0
+    }
+  },
+  "comparison": {
+    "passed": false,
+    "all_zero_regression_checks_passed": true,
+    "category_accuracy_delta": 0.2857142857142857,
+    "failure_reason": "The one-step smoke adapter passed every zero-regression check but failed the configured absolute quality thresholds."
+  },
+  "release_eligible": false
+}

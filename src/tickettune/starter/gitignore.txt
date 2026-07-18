@@ -1,0 +1,6 @@
+.venv/
+artifacts/
+data/processed/
+*.gguf
+*.safetensors
+__pycache__/

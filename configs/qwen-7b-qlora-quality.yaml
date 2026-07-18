@@ -1,0 +1,75 @@
+project_name: tickettune-qwen-7b-qlora-quality
+seed: 42
+model:
+  name_or_path: Qwen/Qwen2.5-7B-Instruct
+  revision: a09a35458c702b33eeacc393d103063234e8bc28
+  parameters_b: 7.0
+  torch_dtype: bfloat16
+  trust_remote_code: false
+  max_sequence_length: 2048
+  eos_token: <|im_end|>
+data:
+  source_path: data/qualified/support_tickets.jsonl
+  processed_dir: data/processed/qwen-7b-quality
+  qualification:
+    required: true
+    review_manifest: data/qualified/review-evidence/review-manifest.bound.json
+  splits:
+    train: 0.8
+    validation: 0.1
+    test: 0.1
+lora:
+  method: qlora
+  r: 32
+  alpha: 64
+  dropout: 0.05
+  bias: none
+  target_modules: all-linear
+  use_rslora: true
+training:
+  output_dir: artifacts/qwen-7b-quality
+  num_train_epochs: 3.0
+  max_steps: null
+  per_device_train_batch_size: 1
+  per_device_eval_batch_size: 1
+  gradient_accumulation_steps: 16
+  learning_rate: 0.0001
+  warmup_steps: 10
+  weight_decay: 0.0
+  logging_steps: 5
+  save_steps: 25
+  eval_steps: 25
+  gradient_checkpointing: true
+  bf16: true
+  fp16: false
+  packing: false
+  completion_only_loss: true
+  optim: paged_adamw_8bit
+  report_to: []
+  use_cpu: false
+generation:
+  max_new_tokens: 256
+  temperature: 0.0
+  top_p: 1.0
+  do_sample: false
+  repetition_penalty: 1.0
+evaluation:
+  output_dir: artifacts/qwen-7b-quality/evaluation
+  thresholds:
+    strict_json_rate: 0.97
+    schema_valid_rate: 0.97
+    category_accuracy: 0.9
+    priority_accuracy: 0.9
+    sentiment_accuracy: 0.85
+    response_policy_rate: 0.97
+deployment:
+  merged_model_dir: artifacts/qwen-7b-quality/merged
+  ollama_model_name: tickettune-qwen-7b-quality
+  ollama_quantization: Q4_K_M
+  vllm_served_model_name: tickettune-qwen-7b-quality
+  vllm_host: 127.0.0.1
+  vllm_port: 8000
+  vllm_dtype: bfloat16
+  max_model_len: 2048
+  tensor_parallel_size: 1
+  gpu_memory_utilization: 0.9

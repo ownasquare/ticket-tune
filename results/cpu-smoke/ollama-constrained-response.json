@@ -1,0 +1,7 @@
+{
+  "category": "billing",
+  "priority": "high",
+  "sentiment": "neutral",
+  "response": "We understand that you are experiencing issues with multiple charges for a single order. We will investigate further to resolve the issue, but please provide us with more details so we can assist you better.",
+  "next_action": "contactbilling"
+}

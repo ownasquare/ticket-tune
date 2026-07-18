@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "profile": "qwen-0.5b-lora-local",
+  "proof_scope": "immutable v2 test candidate and baseline comparison",
+  "status": "completed_but_absolute_quality_gate_failed",
+  "evaluation": {
+    "id": "20260718T195220.440686Z-18a1c2f4f7f9",
+    "relative_path": "artifacts/qwen-0.5b-lora-local/evaluation/runs/20260718T195220.440686Z-18a1c2f4f7f9",
+    "manifest_sha256": "8f5a7933f6c87be97f843338649e80617e8e36d09ea7ecd875f0d53aeeeba6ac",
+    "examples": 7,
+    "test_split_sha256": "08d8433b2e2fdeaf99946b1266a6958bac507a8e736e4f98aae2114bd02a6bb0"
+  },
+  "candidate": {
+    "report_sha256": "ce25c98fc03aef07d90e4ed5f02f6364205561063c66dbc6813dd2a486add78f",
+    "predictions_sha256": "3775c4a5d1da2d0d335ad329aa5018c4e5a00d06240cfe69877554402d69d167",
+    "passed_absolute_thresholds": false,
+    "metrics": {
+      "strict_json_rate": 1.0,
+      "schema_valid_rate": 1.0,
+      "category_accuracy": 0.7142857142857143,
+      "category_macro_f1": 0.6666666666666667,
+      "priority_accuracy": 0.42857142857142855,
+      "priority_macro_f1": 0.5,
+      "sentiment_accuracy": 1.0,
+      "sentiment_macro_f1": 1.0,
+      "response_policy_rate": 1.0
+    }
+  },
+  "baseline": {
+    "report_sha256": "2b00850b5b37ada1f7b7c8763877ba46681413c1e1c50c1b74f378c30736fd9a",
+    "predictions_sha256": "426e335b8720d5d36ccfce6965e39c36402ebba3a26507026b078e6d47e10d84",
+    "passed_absolute_thresholds": false,
+    "metrics": {
+      "strict_json_rate": 0.8571428571428571,
+      "schema_valid_rate": 0.14285714285714285,
+      "category_accuracy": 0.5714285714285714,
+      "category_macro_f1": 0.47619047619047616,
+      "priority_accuracy": 0.14285714285714285,
+      "priority_macro_f1": 0.0625,
+      "sentiment_accuracy": 0.2857142857142857,
+      "sentiment_macro_f1": 0.2,
+      "response_policy_rate": 0.8571428571428571
+    }
+  },
+  "comparison": {
+    "all_non_regression_checks_passed": true,
+    "overall_passed": false,
+    "category_accuracy_delta": 0.1428571428571429,
+    "priority_accuracy_delta": 0.2857142857142857,
+    "sentiment_accuracy_delta": 0.7142857142857143,
+    "failure_reason": "Category and priority improved over baseline but missed their 0.85 absolute thresholds."
+  },
+  "release_eligible": false
+}

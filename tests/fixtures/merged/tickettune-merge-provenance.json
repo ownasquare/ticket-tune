@@ -1,0 +1,24 @@
+{
+  "artifact_sha256": {
+    "config.json": "5692ef1140dc7146551a5479e545de6e468ff4120c6a1152faf916fdd6855185",
+    "model.safetensors": "475a6fe55ed0707806284c6dc29d67cd6e7432a71bdec1876b87c47ae32761f9"
+  },
+  "base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapter_base_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "adapter_config_sha256": "5692ef1140dc7146551a5479e545de6e468ff4120c6a1152faf916fdd6855185",
+  "adapter_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "adapter_weight_files": [
+    "adapter_model.safetensors"
+  ],
+  "adapter_weight_sha256": [
+    "475a6fe55ed0707806284c6dc29d67cd6e7432a71bdec1876b87c47ae32761f9"
+  ],
+  "load_in_4bit": false,
+  "load_in_8bit": false,
+  "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+  "operation": "peft_safe_merge",
+  "safe_merge": true,
+  "safe_serialization": true,
+  "schema_version": 1,
+  "trust_remote_code": false
+}

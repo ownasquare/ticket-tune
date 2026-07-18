@@ -1,0 +1,62 @@
+{
+  "cloud_cli_presence": {
+    "azure_cli": true,
+    "aws_cli": false,
+    "google_cloud_cli": false,
+    "kubernetes_cli": false,
+    "runpod_cli": false,
+    "skypilot_cli": false
+  },
+  "cuda_eligible": false,
+  "dataset_qualification": {
+    "minimum_independent_reviewers": 2,
+    "minimum_records": 1000,
+    "minimum_test_records": 100,
+    "required": true,
+    "status": "blocked_missing_source_and_approved_review_manifest"
+  },
+  "docker": {
+    "architecture": "aarch64",
+    "compose_version": "5.3.1",
+    "engine_version": "29.5.2",
+    "memory_bytes": 12513529856,
+    "nvidia_runtime_available": false,
+    "operating_system": "Ubuntu 24.04.4",
+    "runtime_names": [
+      "io.containerd.runc.v2",
+      "runc"
+    ]
+  },
+  "host": {
+    "architecture": "arm64",
+    "gpu": "Apple M3 Max",
+    "gpu_cores": 30,
+    "memory_bytes": 38654705664,
+    "operating_system": "macOS 26.3 (25D5112c)"
+  },
+  "observed_at": "2026-07-18",
+  "proof_boundary": "local_host_and_cli_presence_only; no_cloud_account_or_credential_state_inspected",
+  "qwen_7b_qlora_preflight": {
+    "accelerator": "mps",
+    "bfloat16_supported": false,
+    "compatible": false,
+    "compute_capability": null,
+    "cuda_version": null,
+    "failure_reasons": [
+      "qlora_requires_cuda",
+      "bfloat16_unsupported"
+    ],
+    "minimum_parameter_and_optimizer_memory_gib": 5.6,
+    "note": "The estimate excludes activation, allocator, CUDA context, evaluation, and serving headroom."
+  },
+  "required_next_target": {
+    "accelerator": "NVIDIA CUDA GPU with bfloat16 support",
+    "architecture": "linux/amd64",
+    "minimum_host_memory_gib": 32,
+    "minimum_storage_gib": 80,
+    "minimum_vram_gib": 24,
+    "nvidia_container_toolkit": true
+  },
+  "schema_version": "1.0",
+  "status": "blocked_external_target"
+}

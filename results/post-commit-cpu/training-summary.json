@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.0",
+  "profile": "cpu-smoke",
+  "proof_scope": "real one-step CPU LoRA training from a clean committed worktree",
+  "status": "completed",
+  "source_control": {
+    "git_revision": "67e254cc29d79827a53f64c1b9e16abad1b1af98",
+    "git_branch": null,
+    "git_dirty": false,
+    "execution_mode": "clean_detached_worktree"
+  },
+  "run": {
+    "id": "20260718T133903.836834Z-4b8b28a480d1",
+    "relative_path": "artifacts/post-commit-cpu/runs/20260718T133903.836834Z-4b8b28a480d1",
+    "manifest_path": "artifacts/post-commit-cpu/runs/20260718T133903.836834Z-4b8b28a480d1/manifest.json",
+    "manifest_sha256": "e7586aa05b414cf3c5b5d96e58c3235416a8f8ee031281f172b0e42da6550eb4",
+    "config_sha256": "4b8b28a480d1ffad91389e34d8f339ede74fad86153ee49697f26fca8d7ac01d",
+    "seed": 42,
+    "method": "lora",
+    "execution_accelerator": "cpu",
+    "max_steps": 1
+  },
+  "model": {
+    "name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "precision": "fp32"
+  },
+  "dataset": {
+    "source_sha256": "c8dc4e5bc19e1230bf370a55897c1ab7d8c6dd36a2e14cb14f944a203fcdcb5f",
+    "manifest_sha256": "bba1c170b057a116a856006dde2012e4aaee404be1bb226564f0bb1ad2ba007c",
+    "total_examples": 56,
+    "splits": {
+      "train": {
+        "count": 42,
+        "sha256": "6d7958c457779304be9c48293213445ae88ca646ae5f5fcc9c95fe395516f3a7"
+      },
+      "validation": {
+        "count": 7,
+        "sha256": "906c40dabee8175e7744e41d127ff011140308bf810baf4f6a466de87ea021a4"
+      },
+      "test": {
+        "count": 7,
+        "sha256": "5439239bf9a2c3c69db4492696a8d05914043e0f5ac4bd1cbf5e4357ece8ebd5"
+      }
+    }
+  },
+  "metrics": {
+    "train_loss": 2.464804172515869,
+    "train_runtime_seconds": 3.2625,
+    "train_samples_per_second": 0.307,
+    "train_steps_per_second": 0.307,
+    "epoch_fraction": 0.023809523809523808,
+    "total_flos": 295634528256.0
+  },
+  "adapter": {
+    "relative_path": "artifacts/post-commit-cpu/runs/20260718T133903.836834Z-4b8b28a480d1/adapter",
+    "config_sha256": "20975ec9951ab1f00cf802e9c75e46760c6d7f09437eaafe944a952a5a221c14",
+    "weights_file": "adapter_model.safetensors",
+    "weights_sha256": "cb662bdd4606b98d18c824ef889b8e0eef70c8c685e37777dd8532961bca4e38"
+  },
+  "release_eligible": false,
+  "release_blockers": [
+    "The one-step smoke model does not pass the absolute quality thresholds.",
+    "The cpu-smoke dataset is explicitly outside the qualified release tier.",
+    "The historical composite parity gate rejected schema-invalid outputs; legacy evidence cannot prove cross-side drift."
+  ]
+}

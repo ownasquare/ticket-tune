@@ -1,0 +1,184 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  secret-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          version: "0.11.16"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv python install 3.12
+      - run: uv sync --frozen --python 3.12
+      - name: Scan tracked files and full Git history
+        run: uv run --no-sync --python 3.12 python scripts/scan_secrets.py
+
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          version: "0.11.16"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv python install ${{ matrix.python-version }}
+      - run: uv sync --frozen --python ${{ matrix.python-version }}
+      - run: uv run --no-sync --python ${{ matrix.python-version }} ruff check .
+      - run: uv run --no-sync --python ${{ matrix.python-version }} ruff format --check .
+      - run: uv run --no-sync --python ${{ matrix.python-version }} mypy src
+      - run: uv run --no-sync --python ${{ matrix.python-version }} bandit -q -r src deploy
+      - run: uv run --no-sync --python ${{ matrix.python-version }} pytest -q --cov=tickettune --cov-report=term-missing --cov-report=xml
+      - run: uv build
+      - run: uv run --no-sync --python ${{ matrix.python-version }} python scripts/verify_wheel_install.py
+
+  production-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Render production Compose model
+        run: >-
+          docker compose
+          --env-file deploy/vllm/production/.env.example
+          -f deploy/vllm/production/compose.yaml
+          config --quiet
+      - name: Validate pinned NGINX configuration
+        run: |
+          validator_root="${RUNNER_TEMP:-$PWD}"
+          validator_dir="$(mktemp -d "$validator_root/tickettune-nginx.XXXXXX")"
+          trap 'rm -rf "$validator_dir"' EXIT
+          chmod 0755 "$validator_dir"
+          openssl req -x509 -newkey rsa:2048 -nodes -days 1 \
+            -subj '/CN=tickettune-ci.invalid' \
+            -keyout "$validator_dir/tls-private-key.pem" \
+            -out "$validator_dir/tls-certificate.pem" >/dev/null 2>&1
+          chmod 0444 "$validator_dir/tls-private-key.pem" "$validator_dir/tls-certificate.pem"
+          docker run --rm --platform linux/amd64 --user 101:101 --read-only \
+            --add-host vllm:127.0.0.1 \
+            --tmpfs /var/cache/nginx:rw,noexec,nosuid,size=32m,uid=101,gid=101 \
+            --tmpfs /var/run:rw,noexec,nosuid,size=4m,uid=101,gid=101 \
+            --entrypoint nginx \
+            -v "$PWD/deploy/vllm/production/nginx.conf:/etc/nginx/nginx.conf:ro" \
+            -v "$validator_dir/tls-certificate.pem:/run/secrets/tls_certificate:ro" \
+            -v "$validator_dir/tls-private-key.pem:/run/secrets/tls_private_key:ro" \
+            nginx:1.30.3-alpine@sha256:61f816887864af764259e28edb5331584ae2e42de57b3cb1e4f134d757559951 \
+            -t
+      - name: Validate pinned Prometheus configuration and rules
+        run: >-
+          docker run --rm --platform linux/amd64 --entrypoint promtool
+          -v "$PWD/deploy/vllm/production:/etc/prometheus:ro"
+          prom/prometheus:v3.13.0@sha256:0e698e35e50d1ddc2d11a4a55b089fe62eb71358a5c204dfafd21bdf8ffe04b8
+          check config /etc/prometheus/prometheus.yml
+      - name: Validate pinned Alertmanager configuration
+        run: |
+          validator_root="${RUNNER_TEMP:-$PWD}"
+          validator_dir="$(mktemp -d "$validator_root/tickettune-alertmanager.XXXXXX")"
+          trap 'rm -rf "$validator_dir"' EXIT
+          chmod 0755 "$validator_dir"
+          printf '%s\n' 'https://example.invalid/tickettune-alerts' \
+            > "$validator_dir/alertmanager-webhook-url"
+          chmod 0444 "$validator_dir/alertmanager-webhook-url"
+          docker run --rm --platform linux/amd64 --entrypoint amtool \
+            -v "$PWD/deploy/vllm/production/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro" \
+            -v "$validator_dir/alertmanager-webhook-url:/run/secrets/alertmanager_webhook_url:ro" \
+            prom/alertmanager:v0.33.1@sha256:a89f8d4520954079275441eecdb71444328bd90633dd4eddfc33b9ed657f349b \
+            check-config /etc/alertmanager/alertmanager.yml
+
+  dependency-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          version: "0.11.16"
+          enable-cache: true
+      - run: uv python install 3.12
+      - run: uv sync --frozen
+      - run: uv run --no-sync pip-audit
+
+  training-stack-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          version: "0.11.16"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv python install 3.12
+      - run: uv sync --frozen --python 3.12 --extra train --extra convert
+      - run: >-
+          uv run --no-sync --python 3.12 python -c
+          "import accelerate, bitsandbytes, datasets, peft, torch, transformers, trl"
+      - run: uv run --no-sync --python 3.12 cmake --version
+      - run: uv run --no-sync --python 3.12 pytest -q tests/test_training_stack_contract.py
+      - run: uv run --no-sync --python 3.12 pip-audit
+
+  cuda-contract-rehearsal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57 # v8.0.0
+        with:
+          version: "0.11.16"
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - run: uv python install 3.12
+      - run: uv sync --frozen --python 3.12 --extra train
+      - name: Prepare the QLoRA rehearsal dataset
+        run: >-
+          uv run --no-sync --python 3.12 tickettune data prepare
+          --config configs/qwen-7b-qlora.yaml
+      - name: Verify CPU-safe CUDA contract surfaces
+        run: >-
+          uv run --no-sync --python 3.12 pytest -q
+          tests/test_cuda_rehearsal.py
+          tests/test_cli.py
+          tests/test_training_stack_contract.py
+          tests/test_export.py
+          tests/test_parity.py
+      - name: Create the release-ineligible CUDA contract rehearsal
+        run: >-
+          uv run --no-sync --python 3.12 tickettune rehearse cuda
+          --config configs/qwen-7b-qlora.yaml
+          --output artifacts/validation/cuda-contract-rehearsal.json
+          --enforce --json
+      - name: Upload the CUDA contract rehearsal only
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: cuda-contract-rehearsal
+          path: artifacts/validation/cuda-contract-rehearsal.json
+          if-no-files-found: error

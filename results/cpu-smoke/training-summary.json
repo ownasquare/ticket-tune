@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "profile": "cpu-smoke",
+  "proof_scope": "real offline CPU LoRA smoke training",
+  "status": "completed",
+  "run": {
+    "id": "20260718T031845.891541Z-35d6408e9cb4",
+    "relative_path": "artifacts/cpu-smoke/runs/20260718T031845.891541Z-35d6408e9cb4",
+    "manifest_path": "artifacts/cpu-smoke/runs/20260718T031845.891541Z-35d6408e9cb4/manifest.json",
+    "manifest_sha256": "97f34a246373baaeab5c8393c6d47164093a0ece26d4da1dfa73c2ad9d75e6df",
+    "config_sha256": "35d6408e9cb4ce5af8c3480929e51c649ae68a263064eb8450ae7f2b83ce4adb",
+    "seed": 42,
+    "method": "lora",
+    "execution_accelerator": "cpu",
+    "max_steps": 1,
+    "source_control": {
+      "git_revision": null,
+      "git_dirty": true,
+      "boundary": "The run predates the repository's first commit, so its source tree is not bound to an exact Git revision."
+    }
+  },
+  "model": {
+    "name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "torch_dtype": "float32"
+  },
+  "dataset": {
+    "source_path": "data/raw/support_tickets.jsonl",
+    "source_sha256": "c8dc4e5bc19e1230bf370a55897c1ab7d8c6dd36a2e14cb14f944a203fcdcb5f",
+    "manifest_path": "data/processed/cpu-smoke/manifest.json",
+    "manifest_sha256": "bba1c170b057a116a856006dde2012e4aaee404be1bb226564f0bb1ad2ba007c",
+    "total_examples": 56,
+    "splits": {
+      "train": {
+        "count": 42,
+        "sha256": "6d7958c457779304be9c48293213445ae88ca646ae5f5fcc9c95fe395516f3a7"
+      },
+      "validation": {
+        "count": 7,
+        "sha256": "906c40dabee8175e7744e41d127ff011140308bf810baf4f6a466de87ea021a4"
+      },
+      "test": {
+        "count": 7,
+        "sha256": "5439239bf9a2c3c69db4492696a8d05914043e0f5ac4bd1cbf5e4357ece8ebd5"
+      }
+    }
+  },
+  "metrics": {
+    "train_loss": 2.464804172515869,
+    "train_runtime_seconds": 2.7738,
+    "train_samples_per_second": 0.361,
+    "train_steps_per_second": 0.361,
+    "epoch_fraction": 0.023809523809523808,
+    "total_flos": 295634528256.0
+  },
+  "adapter": {
+    "relative_path": "artifacts/cpu-smoke/runs/20260718T031845.891541Z-35d6408e9cb4/adapter",
+    "config_sha256": "e55c97a69a91f101620cae926ef0ecb504003c2aaa048136c89bc00a9a8b6eee",
+    "weights_file": "adapter_model.safetensors",
+    "weights_sha256": "7d0f3473628c0958205f2dae3e7438a77466910f5e795acab83ed84d52d4c695",
+    "weights_size_bytes": 17640136
+  },
+  "proof_boundaries": {
+    "proven": [
+      "The pinned 0.5B base model completed one real offline LoRA optimizer step on CPU.",
+      "The source, split, run, and adapter bytes are linked by SHA-256 provenance."
+    ],
+    "not_proven": [
+      "Task quality or production readiness",
+      "CUDA QLoRA training",
+      "A multi-step 7B or 8B training run",
+      "Exact code-commit provenance for this pre-initial-commit smoke run"
+    ]
+  }
+}

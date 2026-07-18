@@ -1,0 +1,369 @@
+name: tickettune-production
+
+services:
+  gateway:
+    image: nginx:1.30.3-alpine@sha256:61f816887864af764259e28edb5331584ae2e42de57b3cb1e4f134d757559951
+    platform: linux/amd64
+    pull_policy: if_not_present
+    command:
+      - nginx
+      - -g
+      - daemon off;
+    depends_on:
+      vllm:
+        condition: service_healthy
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${TLS_PORT:-8443}:8443"
+    networks:
+      - edge
+      - model_internal
+      - observability_internal
+    secrets:
+      - tls_certificate
+      - tls_private_key
+    group_add:
+      - "${SECRET_GROUP_ID:?Set SECRET_GROUP_ID to the numeric host secret group}"
+    volumes:
+      - type: bind
+        source: ./nginx.conf
+        target: /etc/nginx/nginx.conf
+        read_only: true
+        bind:
+          create_host_path: false
+    user: "101:101"
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx:rw,noexec,nosuid,size=32m,uid=101,gid=101
+      - /var/run:rw,noexec,nosuid,size=4m,uid=101,gid=101
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --spider
+        - -q
+        - http://127.0.0.1:9091/metrics
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    cpus: "${GATEWAY_CPUS:-1.0}"
+    mem_limit: ${GATEWAY_MEMORY:-512M}
+    pids_limit: 128
+    deploy:
+      resources:
+        limits:
+          cpus: "${GATEWAY_CPUS:-1.0}"
+          memory: ${GATEWAY_MEMORY:-512M}
+          pids: 128
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      com.tickettune.release-id: ${RELEASE_ID:?Set RELEASE_ID to an immutable release identifier}
+      com.tickettune.git-revision: ${RELEASE_GIT_REVISION:?Set RELEASE_GIT_REVISION to the reviewed commit SHA}
+    restart: unless-stopped
+
+  vllm:
+    image: vllm/vllm-openai:v0.24.0@sha256:f9de5cd9fa907fbf6dbba691eb7db095d48ad58ea283e3eba7142f9a91e186e8
+    platform: linux/amd64
+    pull_policy: if_not_present
+    entrypoint:
+      - python3
+      - /opt/tickettune/vllm-entrypoint.py
+    command:
+      - vllm
+      - serve
+      - ${BASE_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      - --revision
+      - ${MODEL_REVISION:?Set MODEL_REVISION to the reviewed 40-character model commit SHA}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --dtype
+      - ${VLLM_DTYPE:-auto}
+      - --max-model-len
+      - ${MAX_MODEL_LEN:-2048}
+      - --max-num-seqs
+      - ${MAX_NUM_SEQS:-8}
+      - --max-num-batched-tokens
+      - ${MAX_NUM_BATCHED_TOKENS:-4096}
+      - --tensor-parallel-size
+      - ${TENSOR_PARALLEL_SIZE:-1}
+      - --gpu-memory-utilization
+      - ${GPU_MEMORY_UTILIZATION:-0.90}
+      - --enable-lora
+      - --max-lora-rank
+      - ${MAX_LORA_RANK:-64}
+      - --lora-modules
+      - '{"name":"${SERVED_MODEL_NAME:-tickettune}","path":"/models/adapter","base_model_name":"${BASE_MODEL:-Qwen/Qwen2.5-7B-Instruct}"}'
+      - --generation-config
+      - vllm
+      - --disable-log-requests
+      - --disable-uvicorn-access-log
+    expose:
+      - "8000"
+    networks:
+      - model_internal
+    environment:
+      DO_NOT_TRACK: "1"
+      HF_HOME: /home/vllm/.cache/huggingface
+      HF_HUB_OFFLINE: "1"
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      VLLM_NO_USAGE_STATS: "1"
+      VLLM_LOGGING_LEVEL: WARNING
+      SECRET_GROUP_ID: "${SECRET_GROUP_ID:?Set SECRET_GROUP_ID to the numeric host secret group}"
+      RELEASE_ID: ${RELEASE_ID:?Set RELEASE_ID to an immutable release identifier}
+      RELEASE_GIT_REVISION: ${RELEASE_GIT_REVISION:?Set RELEASE_GIT_REVISION to the reviewed commit SHA}
+      EXPECTED_ADAPTER_SHA256: ${EXPECTED_ADAPTER_SHA256:?Set EXPECTED_ADAPTER_SHA256 to canonical adapter inventory SHA-256}
+      TICKETTUNE_ADAPTER_PATH: /models/adapter
+      TICKETTUNE_RUNTIME_CACHE_ROOT: /runtime-cache
+      HOME: /runtime-cache/home
+      XDG_CACHE_HOME: /runtime-cache/xdg
+      VLLM_CACHE_ROOT: /runtime-cache/vllm
+      TORCHINDUCTOR_CACHE_DIR: /runtime-cache/torchinductor
+      TRITON_CACHE_DIR: /runtime-cache/triton
+      CUDA_CACHE_PATH: /runtime-cache/cuda
+    secrets:
+      - vllm_api_key
+    group_add:
+      - "${SECRET_GROUP_ID:?Set SECRET_GROUP_ID to the numeric host secret group}"
+    volumes:
+      - type: bind
+        source: ${ADAPTER_PATH:?Set ADAPTER_PATH to an immutable runs/<run-id>/adapter directory}
+        target: /models/adapter
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${HF_CACHE_PATH:?Set HF_CACHE_PATH to a pre-populated pinned-model cache}
+        target: /home/vllm/.cache/huggingface
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${RUNTIME_CACHE_PATH:?Set RUNTIME_CACHE_PATH to a pre-created writable cache directory}
+        target: /runtime-cache
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./vllm-entrypoint.py
+        target: /opt/tickettune/vllm-entrypoint.py
+        read_only: true
+        bind:
+          create_host_path: false
+    user: "2000:0"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=1g,uid=2000,gid=0
+    gpus: all
+    shm_size: ${VLLM_SHM_SIZE:-8gb}
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - -c
+        - "import http.client,sys;c=http.client.HTTPConnection('127.0.0.1',8000,timeout=2);c.request('GET','/health');sys.exit(0 if c.getresponse().status==200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 5m
+    cpus: "${VLLM_CPUS:-8.0}"
+    mem_limit: ${VLLM_MEMORY:-32G}
+    pids_limit: 512
+    deploy:
+      resources:
+        limits:
+          cpus: "${VLLM_CPUS:-8.0}"
+          memory: ${VLLM_MEMORY:-32G}
+          pids: 512
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities:
+                - gpu
+    logging:
+      driver: local
+      options:
+        max-size: "20m"
+        max-file: "5"
+    labels:
+      com.tickettune.release-id: ${RELEASE_ID:?Set RELEASE_ID to an immutable release identifier}
+      com.tickettune.git-revision: ${RELEASE_GIT_REVISION:?Set RELEASE_GIT_REVISION to the reviewed commit SHA}
+      com.tickettune.model-revision: ${MODEL_REVISION:?Set MODEL_REVISION to the reviewed model commit SHA}
+      com.tickettune.adapter-sha256: ${EXPECTED_ADAPTER_SHA256:?Set EXPECTED_ADAPTER_SHA256 to canonical adapter inventory SHA-256}
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v3.13.0@sha256:0e698e35e50d1ddc2d11a4a55b089fe62eb71358a5c204dfafd21bdf8ffe04b8
+    platform: linux/amd64
+    pull_policy: if_not_present
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=${PROMETHEUS_RETENTION:-24h}
+      - --storage.tsdb.retention.size=${PROMETHEUS_RETENTION_SIZE:-5GB}
+      - --web.listen-address=0.0.0.0:9090
+    expose:
+      - "9090"
+    networks:
+      - observability_internal
+    volumes:
+      - type: bind
+        source: ./prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ./alerts.yml
+        target: /etc/prometheus/alerts.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: volume
+        source: prometheus_data
+        target: /prometheus
+    user: "65534:65534"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m,uid=65534,gid=65534
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --spider
+        - -q
+        - http://127.0.0.1:9090/-/ready
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    cpus: "${PROMETHEUS_CPUS:-1.0}"
+    mem_limit: ${PROMETHEUS_MEMORY:-1G}
+    pids_limit: 128
+    deploy:
+      resources:
+        limits:
+          cpus: "${PROMETHEUS_CPUS:-1.0}"
+          memory: ${PROMETHEUS_MEMORY:-1G}
+          pids: 128
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      com.tickettune.release-id: ${RELEASE_ID:?Set RELEASE_ID to an immutable release identifier}
+      com.tickettune.git-revision: ${RELEASE_GIT_REVISION:?Set RELEASE_GIT_REVISION to the reviewed commit SHA}
+    restart: unless-stopped
+
+  alertmanager:
+    image: prom/alertmanager:v0.33.1@sha256:a89f8d4520954079275441eecdb71444328bd90633dd4eddfc33b9ed657f349b
+    platform: linux/amd64
+    pull_policy: if_not_present
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+      - --storage.path=/alertmanager
+      - --web.listen-address=0.0.0.0:9093
+    expose:
+      - "9093"
+    networks:
+      - observability_internal
+      - notification_egress
+    secrets:
+      - alertmanager_webhook_url
+    group_add:
+      - "${SECRET_GROUP_ID:?Set SECRET_GROUP_ID to the numeric host secret group}"
+    volumes:
+      - type: bind
+        source: ./alertmanager.yml
+        target: /etc/alertmanager/alertmanager.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: volume
+        source: alertmanager_data
+        target: /alertmanager
+    user: "65534:65534"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m,uid=65534,gid=65534
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - --spider
+        - -q
+        - http://127.0.0.1:9093/-/ready
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    cpus: "${ALERTMANAGER_CPUS:-0.5}"
+    mem_limit: ${ALERTMANAGER_MEMORY:-256M}
+    pids_limit: 128
+    deploy:
+      resources:
+        limits:
+          cpus: "${ALERTMANAGER_CPUS:-0.5}"
+          memory: ${ALERTMANAGER_MEMORY:-256M}
+          pids: 128
+    logging:
+      driver: local
+      options:
+        max-size: "10m"
+        max-file: "5"
+    labels:
+      com.tickettune.release-id: ${RELEASE_ID:?Set RELEASE_ID to an immutable release identifier}
+      com.tickettune.git-revision: ${RELEASE_GIT_REVISION:?Set RELEASE_GIT_REVISION to the reviewed commit SHA}
+    restart: unless-stopped
+
+networks:
+  edge:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: 127.0.0.1
+      com.docker.network.bridge.enable_ip_masquerade: "false"
+  model_internal:
+    driver: bridge
+    internal: true
+  observability_internal:
+    driver: bridge
+    internal: true
+  notification_egress:
+    driver: bridge
+
+volumes:
+  prometheus_data: {}
+  alertmanager_data: {}
+
+secrets:
+  vllm_api_key:
+    file: ${VLLM_API_KEY_FILE:?Set VLLM_API_KEY_FILE to an external secret file}
+  tls_certificate:
+    file: ${TLS_CERTIFICATE_FILE:?Set TLS_CERTIFICATE_FILE to the TLS certificate chain}
+  tls_private_key:
+    file: ${TLS_PRIVATE_KEY_FILE:?Set TLS_PRIVATE_KEY_FILE to the TLS private key}
+  alertmanager_webhook_url:
+    file: ${ALERTMANAGER_WEBHOOK_URL_FILE:?Set ALERTMANAGER_WEBHOOK_URL_FILE to an external URL secret file}

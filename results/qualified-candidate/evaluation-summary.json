@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "profile": "qwen-0.5b-candidate-local",
+  "proof_scope": "single immutable held-out test comparison of the trained adapter and pinned base model",
+  "status": "completed_all_quality_thresholds_passed",
+  "evaluation": {
+    "id": "20260718T230712.403488Z-daa7cf36d6b3",
+    "relative_path": "artifacts/qwen-0.5b-candidate-local/evaluation/runs/20260718T230712.403488Z-daa7cf36d6b3",
+    "manifest_sha256": "a56408a7a2b5b97c171f5977d48a7350a1bc2e5368d94f2d1f3c2322fa36102a",
+    "examples": 112,
+    "test_split_sha256": "e0cf0900fd3f5def7835fd920ef58440f6817acd7352147e6a629e512945aef3",
+    "test_evaluation_count": 1
+  },
+  "candidate": {
+    "report_sha256": "b85ad7b246419a4429404922fb2da3f03b3ef2406a2698086662f1a5a3e50b2b",
+    "predictions_sha256": "1b15262430311092b93f7272b90cada438214e1af08bdf80891cff236b9810c0",
+    "passed_absolute_thresholds": true,
+    "metrics": {
+      "strict_json_rate": 1.0,
+      "schema_valid_rate": 1.0,
+      "category_accuracy": 1.0,
+      "category_macro_f1": 1.0,
+      "priority_accuracy": 1.0,
+      "priority_macro_f1": 1.0,
+      "sentiment_accuracy": 1.0,
+      "sentiment_macro_f1": 1.0,
+      "response_policy_rate": 1.0,
+      "exact_match_rate": 1.0
+    }
+  },
+  "baseline": {
+    "report_sha256": "1c69c3a5d7daf296584a6ec65754fa67baaca613ccc2c4017cff9887dc28a3ed",
+    "predictions_sha256": "3c7d1afe26a47ecaa3ff0c409ba93f79a570f9994cd0321a8cac46bae24656c5",
+    "passed_absolute_thresholds": false,
+    "metrics": {
+      "strict_json_rate": 0.9821428571428571,
+      "schema_valid_rate": 0.39285714285714285,
+      "category_accuracy": 0.3392857142857143,
+      "category_macro_f1": 0.3001956196961696,
+      "priority_accuracy": 0.5535714285714286,
+      "priority_macro_f1": 0.5096153846153846,
+      "sentiment_accuracy": 0.35714285714285715,
+      "sentiment_macro_f1": 0.24929757343550446,
+      "response_policy_rate": 0.9732142857142857,
+      "exact_match_rate": 0.0
+    }
+  },
+  "comparison": {
+    "all_non_regression_checks_passed": true,
+    "overall_passed": true,
+    "category_accuracy_delta": 0.6607142857142857,
+    "priority_accuracy_delta": 0.4464285714285714,
+    "sentiment_accuracy_delta": 0.6428571428571428,
+    "schema_valid_rate_delta": 0.6071428571428572,
+    "exact_match_rate_delta": 1.0
+  },
+  "release_eligible": false,
+  "release_boundary": "Local task-quality gates passed, but automated audits and model metrics do not replace two-human dataset qualification or CUDA serving acceptance."
+}

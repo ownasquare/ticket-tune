@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "proof_scope": "CUDA QLoRA static-contract enforcement and vLLM launch-plan fallback without NVIDIA hardware",
+  "status": "static_contract_passed_runtime_blocked_no_cuda",
+  "cuda_rehearsal": {
+    "profile": "qwen-7b-qlora-quality",
+    "relative_path": "artifacts/validation/cuda-quality-contract-prepared-2026-07-18.json",
+    "sha256": "c245fef8e80c8b026dc21203f4fcbf42ce58715f8ddf4d5cf899cb595a1da397",
+    "config_sha256": "b66e142db46bfabe3f22e5b621db0703caa34bc478e2045bc69f369c760640e4",
+    "model_revision": "a09a35458c702b33eeacc393d103063234e8bc28",
+    "static_contract_passed": true,
+    "prepared_dataset_verified": true,
+    "prepared_manifest_sha256": "479bdf2dbfd93502c7416464e0ddd50fcb26f41b65d6f1eb42b208ca1fe07daa",
+    "declared_quantization": "nf4_double_quantization",
+    "declared_compute_precision": "bf16",
+    "executed_cuda": false,
+    "model_weights_loaded": false,
+    "optimizer_steps": 0,
+    "runtime_status": "blocked_no_cuda",
+    "release_eligible": false
+  },
+  "vllm_plan": {
+    "profile": "qwen-0.5b-candidate-local",
+    "executed": false,
+    "execution_state": "planned",
+    "proof_boundary": "launch_plan_only",
+    "model_revision": "7ae557604adf67be50417f59c2c2f167def9a775",
+    "adapter_weights_sha256": "30be9543276563ad2f5ca5da7a99e74486d09a85e42a7ffa4c9b1310bc38ac0f",
+    "bind_host": "127.0.0.1",
+    "port": 8000,
+    "tensor_parallel_size": 1,
+    "max_lora_rank": 8,
+    "offline_model_loading": true,
+    "lineage_boundary": "unqualified_local_smoke_override_not_release_evidence"
+  },
+  "remaining_external_gates": [
+    "Two distinct human reviewers must approve every source record in v1.2 packets.",
+    "The unchanged 7B profile must execute on a compatible Linux NVIDIA CUDA host.",
+    "vLLM health, inference, and authenticated serving acceptance must run on that compatible host."
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "profile": "cpu-smoke",
+  "proof_scope": "local safe merge, GGUF conversion, Ollama registration, and loopback inference",
+  "status": "local_ollama_runtime_proven",
+  "source_run_id": "20260718T031845.891541Z-35d6408e9cb4",
+  "model": {
+    "name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+    "revision": "7ae557604adf67be50417f59c2c2f167def9a775"
+  },
+  "safe_merge": {
+    "relative_path": "artifacts/cpu-smoke/deployments/20260718T031845.891541Z-35d6408e9cb4/merged",
+    "provenance_path": "artifacts/cpu-smoke/deployments/20260718T031845.891541Z-35d6408e9cb4/merged/tickettune-merge-provenance.json",
+    "provenance_sha256": "ad259a4cb2736d597841a554e722f89aed021ea06b01ccc0986e2c055cc6d248",
+    "operation": "peft_safe_merge",
+    "safe_merge": true,
+    "safe_serialization": true,
+    "functional_adapter_merged_parity_checked": false,
+    "allow_download": false,
+    "adapter_config_sha256": "e55c97a69a91f101620cae926ef0ecb504003c2aaa048136c89bc00a9a8b6eee",
+    "adapter_weights_sha256": "7d0f3473628c0958205f2dae3e7438a77466910f5e795acab83ed84d52d4c695",
+    "merged_model_sha256": "10febff16d9c73c80543d5ea98a11da205d0a6a8795555ff9fa45ff60dba86e9"
+  },
+  "ollama_export": {
+    "relative_path": "artifacts/cpu-smoke/deployments/20260718T031845.891541Z-35d6408e9cb4/ollama",
+    "provenance_path": "artifacts/cpu-smoke/deployments/20260718T031845.891541Z-35d6408e9cb4/ollama/tickettune-ollama-export-provenance.json",
+    "provenance_sha256": "563426fd6ec160c0a92c90f58fb548614530f9cb38623a943d060ad8cc2c6924",
+    "llama_cpp_revision": "aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3",
+    "artifacts": {
+      "tickettune-cpu-smoke-f16.gguf": {
+        "sha256": "a57b44cbfbf56aed0428d3819b81f868fda805ed117c5018d9807f993d743fe3",
+        "size_bytes": 994156192
+      },
+      "tickettune-cpu-smoke-q4_k_m.gguf": {
+        "sha256": "502905577a06697170e427032e0e2feba863c742e07c1818a3efa7e0fb040e8e",
+        "size_bytes": 397807264
+      },
+      "Modelfile": {
+        "sha256": "e4b7a7edd1de6ec63c88a8ceb8cbc8fa03ec3a42df4fbfd0f2f3ecbca11f497d"
+      }
+    }
+  },
+  "ollama_runtime": {
+    "version": "0.32.1",
+    "endpoint": "http://127.0.0.1:11434",
+    "loopback_only_for_proof": true,
+    "registered_model": "tickettune-cpu-smoke:latest",
+    "registered_model_id": "0efa04c454b7",
+    "registration_succeeded": true,
+    "inference_checks": {
+      "unconstrained": {
+        "request_succeeded": true,
+        "domain_schema_valid": false,
+        "sanitized_violations": [
+          "category used the non-enum value 'payment dispute'",
+          "next_action contained a space instead of the required action-token form"
+        ],
+        "full_response_retained": false
+      },
+      "json_schema_constrained": {
+        "request_succeeded": true,
+        "domain_schema_valid": true,
+        "all_five_required_fields_present": true,
+        "observed_category": "billing",
+        "observed_priority": "high",
+        "response_artifact": "results/cpu-smoke/ollama-constrained-response.json",
+        "response_artifact_sha256": "47fa8f98df421b88f13d0ff1335e7f16c788b5f1658f283145a285d2c01ddb86",
+        "validated_with": "tickettune.schemas.TriageOutput"
+      }
+    }
+  },
+  "proof_boundaries": {
+    "proven": [
+      "The exact merged model was converted to F16 and Q4_K_M GGUF artifacts with recorded hashes.",
+      "Ollama 0.32.1 registered the Q4_K_M model and served local loopback inference.",
+      "JSON-schema-constrained inference returned a valid TicketTune domain object."
+    ],
+    "not_proven": [
+      "Unconstrained inference reliably satisfies the TicketTune domain schema",
+      "Functional adapter-versus-merged inference parity",
+      "vLLM runtime serving",
+      "CUDA or multi-GPU serving",
+      "Remote or production deployment, authentication, TLS, load, or monitoring",
+      "A model that passes the absolute quality thresholds"
+    ]
+  }
+}

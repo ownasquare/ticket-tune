@@ -1,0 +1,67 @@
+name: tickettune-vllm
+
+services:
+  vllm:
+    # linux/amd64 manifest digest verified from Docker Hub on 2026-07-17.
+    image: vllm/vllm-openai:v0.24.0@sha256:f9de5cd9fa907fbf6dbba691eb7db095d48ad58ea283e3eba7142f9a91e186e8
+    platform: linux/amd64
+    pull_policy: if_not_present
+    command:
+      - ${BASE_MODEL:-Qwen/Qwen2.5-7B-Instruct}
+      - --revision
+      - ${MODEL_REVISION:?Set MODEL_REVISION to the reviewed 40-character model commit SHA}
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --dtype
+      - ${VLLM_DTYPE:-auto}
+      - --max-model-len
+      - ${MAX_MODEL_LEN:-2048}
+      - --tensor-parallel-size
+      - ${TENSOR_PARALLEL_SIZE:-1}
+      - --gpu-memory-utilization
+      - ${GPU_MEMORY_UTILIZATION:-0.90}
+      - --enable-lora
+      - --max-lora-rank
+      - ${MAX_LORA_RANK:-64}
+      - --lora-modules
+      - '{"name":"${SERVED_MODEL_NAME:-tickettune}","path":"/models/adapter","base_model_name":"${BASE_MODEL:-Qwen/Qwen2.5-7B-Instruct}"}'
+      - --generation-config
+      - vllm
+      - --disable-log-requests
+    ports:
+      - "127.0.0.1:${VLLM_PORT:-8000}:8000"
+    environment:
+      DO_NOT_TRACK: "1"
+      HF_HOME: /home/vllm/.cache/huggingface
+      HF_HUB_OFFLINE: ${HF_HUB_OFFLINE:-1}
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TRANSFORMERS_OFFLINE: ${TRANSFORMERS_OFFLINE:-1}
+      VLLM_NO_USAGE_STATS: "1"
+    volumes:
+      - type: bind
+        source: ${ADAPTER_PATH:?Set ADAPTER_PATH to an immutable runs/<run-id>/adapter directory}
+        target: /models/adapter
+        read_only: true
+      - type: bind
+        source: ${HF_CACHE_PATH:-./.cache/huggingface}
+        target: /home/vllm/.cache/huggingface
+    user: "2000:0"
+    gpus: all
+    shm_size: ${VLLM_SHM_SIZE:-8gb}
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - -c
+        - "import http.client,sys;c=http.client.HTTPConnection('127.0.0.1',8000,timeout=2);c.request('GET','/health');sys.exit(0 if c.getresponse().status==200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 10
+      start_period: 5m
+    restart: unless-stopped

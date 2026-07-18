@@ -35,7 +35,7 @@ train = [
   "safetensors>=0.6,<1",
   "sentencepiece>=0.2,<1",
   "torch>=2.8,<3",
-  "transformers==5.13.0",
+  "transformers==5.14.1",
   "trl==1.7.1",
 ]
 convert = [

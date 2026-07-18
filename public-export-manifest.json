@@ -356,8 +356,8 @@
     {
       "mode": "100644",
       "path": "docs/project/2026-07-18-qualified-data-local-quality-public-release-completion.md",
-      "sha256": "6d5935ac7cc1ef311b2dcfd723895e4ea63625af02235665e9847733bdbe49c3",
-      "size_bytes": 9266
+      "sha256": "96e4c032fca51d212ba774519ffd1578d0c6376396b9665102925d5a2336f9dd",
+      "size_bytes": 9725
     },
     {
       "mode": "100644",
@@ -680,8 +680,8 @@
     {
       "mode": "100644",
       "path": "src/tickettune/secret_scan.py",
-      "sha256": "b330fe334224b7a51874fb51bf771d951f789b1b805aa908919defaceaa6c34b",
-      "size_bytes": 16272
+      "sha256": "1d40a99bdb64ce6596bbf17ae1c5f388b050e663224b3182f93ce028625db789",
+      "size_bytes": 17430
     },
     {
       "mode": "100644",
@@ -860,8 +860,8 @@
     {
       "mode": "100644",
       "path": "tests/test_secret_scan.py",
-      "sha256": "7c7a3d99e147d565e89634e83d63e09114e8fcbfd928d4fe0b794555f0b02cfb",
-      "size_bytes": 6273
+      "sha256": "8d916c7a1ec29ee4194da4b674f2a30102922b7a61d696b6f745febb3e3b53c6",
+      "size_bytes": 7829
     },
     {
       "mode": "100644",
@@ -889,5 +889,5 @@
     }
   ],
   "schema_version": 1,
-  "source_revision": "1f5ac5c82fd6bea860b81fb8326caabafa153ca7"
+  "source_revision": "1ac034781a1f213dce02e73e8e731acaf5209413"
 }

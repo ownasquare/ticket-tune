@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 import subprocess
@@ -108,6 +109,54 @@ def test_scan_ignores_untracked_working_tree_files(repository: Path) -> None:
 
     assert report.findings == ()
     assert report.tracked_file_count == 1
+
+
+def test_scan_accepts_only_digest_fields_in_public_export_manifest(repository: Path) -> None:
+    manifest = repository / "public-export-manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "source_revision": hashlib.sha1(b"source", usedforsecurity=False).hexdigest(),
+                "files": [
+                    {
+                        "path": "README.md",
+                        "sha256": hashlib.sha256(b"# Clean fixture\n").hexdigest(),
+                    }
+                ],
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _commit(repository, "add public export manifest")
+
+    report = scan_repository(repository)
+
+    assert report.findings == ()
+    assert report.tracked_file_count == 2
+
+
+def test_scan_still_finds_secrets_in_other_public_manifest_fields(repository: Path) -> None:
+    manifest = repository / "public-export-manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "source_revision": hashlib.sha1(b"source", usedforsecurity=False).hexdigest(),
+                "sha256": hashlib.sha256(b"README").hexdigest(),
+                "aws_access_key_id": _fake_access_key(),
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _commit(repository, "add unsafe public export manifest")
+
+    report = scan_repository(repository)
+
+    assert report.findings
+    assert {finding.path for finding in report.findings} == {"public-export-manifest.json"}
 
 
 def test_scan_finds_secret_removed_from_head_in_unique_history_blob(

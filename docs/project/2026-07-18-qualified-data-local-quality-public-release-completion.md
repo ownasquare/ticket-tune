@@ -147,6 +147,12 @@ the private development history, internal handoffs, ignored runtime artifacts, r
 and trained weights are not published. The public export manifest binds the published files back to
 the reviewed local source revision.
 
+The first hosted secret-scan run exposed a manifest-specific circularity: the generated export
+manifest is itself an inventory of high-entropy SHA-256 values, including the reviewed baseline's
+hash. The scanner now ignores only strict `sha256` and `source_revision` fields in that one generated
+manifest while continuing to scan every other field and detector type. Regression tests prove that
+digest inventory passes and an embedded credential still fails.
+
 ## Validation environment and boundaries
 
 - Local environment: Apple Silicon, 36 GB unified memory, Torch 2.13.0.

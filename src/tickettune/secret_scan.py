@@ -28,10 +28,15 @@ from detect_secrets.settings import configure_settings_from_baseline, default_se
 
 DETECT_SECRETS_VERSION = "1.5.0"
 BASELINE_NAME = ".secrets.baseline"
+PUBLIC_EXPORT_MANIFEST_NAME = "public-export-manifest.json"
 
 FindingScope = Literal["working-tree", "history"]
 _HASH_PATTERN = re.compile(r"[0-9a-f]{40}")
 _OBJECT_ID_PATTERN = re.compile(rb"[0-9a-f]{40,64}")
+_PUBLIC_MANIFEST_DIGEST_PATTERNS = (
+    re.compile(r'^\s*"sha256": "[0-9a-f]{64}",?\s*$'),
+    re.compile(r'^\s*"source_revision": "[0-9a-f]{40}",?\s*$'),
+)
 
 
 class SecretScanError(RuntimeError):
@@ -298,7 +303,28 @@ def _scan_path(
     logical_path: str,
     blob_oid: str | None = None,
 ) -> Iterator[Finding]:
+    manifest_lines: tuple[str, ...] = ()
+    if logical_path == PUBLIC_EXPORT_MANIFEST_NAME:
+        try:
+            manifest_lines = tuple(actual_path.read_text(encoding="utf-8").splitlines())
+        except (OSError, UnicodeDecodeError):
+            # Let detect-secrets handle unreadable or non-text input normally.
+            manifest_lines = ()
+
     for potential in scan_file(str(actual_path)):
+        line_index = int(potential.line_number) - 1
+        if (
+            potential.type == "Hex High Entropy String"
+            and 0 <= line_index < len(manifest_lines)
+            and any(
+                pattern.fullmatch(manifest_lines[line_index])
+                for pattern in _PUBLIC_MANIFEST_DIGEST_PATTERNS
+            )
+        ):
+            # The generated public manifest is intentionally an inventory of SHA-256
+            # digests and one Git revision. Other fields and detector types remain scanned.
+            potential.secret_value = None
+            continue
         yield _redact_potential_secret(
             potential,
             scope=scope,

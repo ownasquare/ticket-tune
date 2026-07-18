@@ -36,7 +36,7 @@ train = [
   "sentencepiece>=0.2,<1",
   "torch>=2.8,<3",
   "transformers==5.13.0",
-  "trl==1.7.1",
+  "trl==1.8.0",
 ]
 convert = [
   "cmake==4.4.0",

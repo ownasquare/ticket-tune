@@ -356,8 +356,8 @@
     {
       "mode": "100644",
       "path": "docs/project/2026-07-18-qualified-data-local-quality-public-release-completion.md",
-      "sha256": "96e4c032fca51d212ba774519ffd1578d0c6376396b9665102925d5a2336f9dd",
-      "size_bytes": 9725
+      "sha256": "23de5900571772df730bf0efc88d061ddeed8c70fbc2866ef1386e821150ea64",
+      "size_bytes": 10311
     },
     {
       "mode": "100644",
@@ -398,8 +398,8 @@
     {
       "mode": "100644",
       "path": "pyproject.toml",
-      "sha256": "ae870fab488d1149153ba1a9559ef6478a7b28a3ad9345905de1c0e56907a714",
-      "size_bytes": 3631
+      "sha256": "3b4fc2d1fbf0aee20210dbe711ffd2eec05274cf5895ead303fe107dc704f8a8",
+      "size_bytes": 3650
     },
     {
       "mode": "100644",
@@ -770,8 +770,8 @@
     {
       "mode": "100644",
       "path": "tests/test_cli.py",
-      "sha256": "812b410c2ffe037e1a817efb82e02a4c0dbc078fe733e959810708f1e23c7f70",
-      "size_bytes": 34812
+      "sha256": "cd5b7344138603a3515d20989f4d0baca1b3446393cc4aaded3f6498e139e3d3",
+      "size_bytes": 34858
     },
     {
       "mode": "100644",
@@ -884,10 +884,10 @@
     {
       "mode": "100644",
       "path": "uv.lock",
-      "sha256": "f177ae009d17edf13bbf9f2db8dd5715001f2b8b50af4d07f795a3b00f5eab9e",
-      "size_bytes": 334148
+      "sha256": "b589f32311358091b1b53db81b41d2dc4cda53d4f0795d4df094fdf6191f5f43",
+      "size_bytes": 334220
     }
   ],
   "schema_version": 1,
-  "source_revision": "1ac034781a1f213dce02e73e8e731acaf5209413"
+  "source_revision": "e714f03a622fdd1a058d849fdf88bb46cabea3b6"
 }

@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
+from click import unstyle
 from typer.testing import CliRunner
 
 from tickettune import cli as cli_module
@@ -57,12 +58,13 @@ def test_commands_are_discoverable(command: list[str]) -> None:
     ],
 )
 def test_export_and_serve_help_marks_local_smoke_override(command: list[str]) -> None:
-    result = CliRunner().invoke(app, command, terminal_width=160)
+    result = CliRunner().invoke(app, command, terminal_width=160, color=True)
+    output = unstyle(result.output)
 
-    assert result.exit_code == 0, result.output
-    assert "--allow-unqualified-loca" in result.output
-    assert "release" in result.output
-    assert "evidence" in result.output
+    assert result.exit_code == 0, output
+    assert "--allow-unqualified-loca" in output
+    assert "release" in output
+    assert "evidence" in output
 
 
 def test_export_and_serve_cli_defaults_reject_unqualified_fixtures(tmp_path: Path) -> None:

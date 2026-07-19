@@ -153,6 +153,13 @@ hash. The scanner now ignores only strict `sha256` and `source_revision` fields 
 manifest while continuing to scan every other field and detector type. Regression tests prove that
 digest inventory passes and an embedded credential still fails.
 
+The first hosted CUDA contract rehearsal also exposed a presentation-only test difference: GitHub's
+Linux runner emitted ANSI-styled CLI help while the local runner did not. The help assertion now
+forces styled output and removes styling before checking the safety language, preserving the same
+release-evidence warning while making the contract deterministic across environments. The clean
+public-install check also confirmed that Typer 0.27 no longer declares Click transitively, so Click
+is now an explicit core dependency rather than an accidental training-environment dependency.
+
 ## Validation environment and boundaries
 
 - Local environment: Apple Silicon, 36 GB unified memory, Torch 2.13.0.
